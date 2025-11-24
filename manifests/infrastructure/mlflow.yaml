@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow
+  namespace: kserve
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlflow
+  template:
+    metadata:
+      labels:
+        app: mlflow
+    spec:
+      containers:
+      - name: mlflow
+        image: ghcr.io/mlflow/mlflow:v2.14.1
+        command:
+        - mlflow
+        - server
+        - --host
+        - 0.0.0.0
+        - --port
+        - "5000"
+        - --backend-store-uri
+        - sqlite:///mlflow.db
+        - --default-artifact-root
+        - s3://mlflow/artifacts
+        ports:
+        - containerPort: 5000
+        env:
+        # Connect to the MinIO we installed earlier
+        - name: MLFLOW_S3_ENDPOINT_URL
+          value: "http://minio-service.kserve.svc.cluster.local:9000"
+        - name: MLFLOW_S3_IGNORE_TLS
+          value: "true"
+        - name: AWS_ACCESS_KEY_ID
+          value: "minioadmin"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "minioadmin"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlflow-service
+  namespace: kserve
+spec:
+  selector:
+    app: mlflow
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
