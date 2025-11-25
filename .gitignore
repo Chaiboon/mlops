@@ -14,9 +14,9 @@ venv/
 # Kubernetes Secrets (Safety First!)
 # Never commit a file that contains 'kind: Secret' with actual data
 secrets.yaml
+manifests/models/secrets.yaml
 kubeconfig
 *.kubeconfig
 
 # Large Data (Don't push the model file itself if it's huge)
 data/
-models/

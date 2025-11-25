@@ -22,10 +22,16 @@ spec:
         - --console-address
         - :9001
         env:
-        - name: MINIO_ROOT_USER # <- move to .env
-          value: "minioadmin"
+        - name: MINIO_ROOT_USER 
+          valueFrom:
+            secretKeyRef:
+              name: my-minio-secret
+              key: AWS_ACCESS_KEY_ID
         - name: MINIO_ROOT_PASSWORD
-          value: "minioadmin"
+          valueFrom:
+            secretKeyRef:
+              name: my-minio-secret
+              key: AWS_SECRET_ACCESS_KEY
         ports:
         - containerPort: 9000 # API Port
         - containerPort: 9001 # UI Port
