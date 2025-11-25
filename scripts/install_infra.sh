@@ -75,15 +75,11 @@ if ! helm install kserve oci://ghcr.io/kserve/charts/kserve --version v0.15.0 \
     --wait
 fi
 
-kubectl apply -f manifests/models/secrets.yaml -n kserve
-
-kubectl apply -f manifests/infrastructure/service-account.yaml
 
 echo "🔧 Applying Your Custom Configurations..."
-kubectl apply -f manifests/infrastructure/envoy-nodeport.yaml
-kubectl apply -f manifests/infrastructure/gateway-class.yaml
-kubectl apply -f manifests/infrastructure/minio.yaml
+
+helm install kserve-stack manifests/kserve-infra -n kserve --create-namespace
+sleep 30
 kubectl apply -f manifests/infrastructure/minio-init.yaml
-kubectl apply -f manifests/infrastructure/mlflow.yaml
 
 echo "✅ Installation Complete! Your MLOps Platform is ready."

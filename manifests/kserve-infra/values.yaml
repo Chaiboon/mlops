@@ -1,0 +1,8 @@
+minio:
+  image: "minio/minio:latest"
+  mcImage: "minio/mc:latest"
+  rootUser: "minioadmin"
+  rootPassword: "minioadmin"
+
+mlflow:
+  image: "ghcr.io/mlflow/mlflow:v2.14.1"

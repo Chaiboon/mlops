@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: minio-make-bucket
+  name: manual-minio-init
   namespace: kserve
 spec:
   template:
@@ -10,7 +10,6 @@ spec:
       - name: create-bucket
         image: minio/mc:latest
         env:
-        # Load the same credentials from your Secret
         - name: MINIO_ROOT_USER
           valueFrom:
             secretKeyRef:
@@ -24,16 +23,13 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
         - |
-          echo "⏳ Waiting for MinIO to be ready..."
-          # Retrying logic in case MinIO is slow to start
-          until mc alias set myminio http://minio-service.kserve.svc.cluster.local:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD; do
-            echo "zzz... MinIO not ready yet. Retrying in 2 seconds..."
-            sleep 2
-          done
+          echo "1. Configuring MinIO Client..."
+          # We use the internal DNS name: minio-service
+          mc alias set myminio http://minio-service:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD
           
-          echo "🚀 Creating bucket 'mlflow'..."
-          # mb = make bucket. --ignore-existing prevents errors if run twice.
+          echo "2. Creating Bucket..."
           mc mb myminio/mlflow --ignore-existing
           
-          echo "✅ Bucket created successfully!"
-      restartPolicy: OnFailure
+          echo "3. Listing Buckets to verify..."
+          mc ls myminio
+      restartPolicy: Never
