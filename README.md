@@ -12,8 +12,18 @@
 chmod +x scripts/install_stack.sh
 ./scripts/install_infra.sh
 ```
-
-# Verify UI
+[!NOTE]
+**Don't Panic if KServe installation fails initially!**
+ 
+During the **Step 5: KServe** installation, you may see red error messages like `INSTALLATION FAILED` or `connection refused`. 
+ 
+This is a known race condition where the KServe Webhook is not yet ready to validate resources. The `install_stack.sh` script is designed to handle this automatically:
+1. It detects the failure.
+2. It cleans up the "zombie" webhooks blocking the installation.
+3. It waits 15 seconds and successfully retries.
+ 
+**Action:** Please be patient and let the script finish. You will see a message: `⚠️ First attempt hit the Race Condition. Retrying...`
+Verify UI
 
 Minio
 ```
