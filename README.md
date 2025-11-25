@@ -15,7 +15,7 @@ chmod +x scripts/install_stack.sh
 [!NOTE]
 **Don't Panic if KServe installation fails initially!**
  
-During the **Step 5: KServe** installation, you may see red error messages like `INSTALLATION FAILED` or `connection refused`. 
+During the **KServe** installation, you may see red error messages like `INSTALLATION FAILED` or `connection refused`. 
  
 This is a known race condition where the KServe Webhook is not yet ready to validate resources. The `install_stack.sh` script is designed to handle this automatically:
 1. It detects the failure.
