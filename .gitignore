@@ -20,3 +20,4 @@ kubeconfig
 
 # Large Data (Don't push the model file itself if it's huge)
 data/
+notebooks/dataset
